@@ -10,7 +10,6 @@ go get github.com/ustrajunior/cpf
 ## Usage
 
 Call the valid func passing the cpf string
-Returns bool
 
 	cpf.Valid("886.100.254-46") => true
 	cpf.Valid("88610025446") => true
