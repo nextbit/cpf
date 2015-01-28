@@ -9,6 +9,11 @@ import (
 )
 
 func Valid(cpf string) bool {
+	reg := regexp.MustCompile(`(1|2|3|4|5|6|7|8|9){11}`)
+	if reg.MatchString(clean(cpf)) {
+		return false
+	}
+
 	return fullCPF(cpf) == clean(cpf)
 }
 
