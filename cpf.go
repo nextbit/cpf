@@ -8,7 +8,11 @@ import (
 	"unicode/utf8"
 )
 
+// Valid checks if the passed cpf is valid
 func Valid(cpf string) bool {
+	if len(cpf) != 11 && len(cpf) != 14 {
+		return false
+	}
 	reg := regexp.MustCompile(`(1|2|3|4|5|6|7|8|9){11}`)
 	if reg.MatchString(clean(cpf)) {
 		return false

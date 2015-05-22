@@ -70,3 +70,10 @@ func TestInValidSameNumbersWithoutDots(t *testing.T) {
 		}
 	}
 }
+
+func TestInvalidEmpty(t *testing.T) {
+	v := Valid("")
+	if v != false {
+		t.Error("Expected false, got", v)
+	}
+}
