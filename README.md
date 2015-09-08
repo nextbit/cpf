@@ -1,5 +1,5 @@
 # cpf
-[![Build status](https://secure.travis-ci.org/ustrajunior/cpf.png)](https://secure.travis-ci.org/ustrajunior/cpf)
+[![Build status](https://secure.travis-ci.org/nextbit/cpf.png)](https://secure.travis-ci.org/nextbit/cpf)
 
 Brazilian CPF validator
 
