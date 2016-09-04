@@ -5,7 +5,7 @@ import (
 	"math"
 	"regexp"
 	"strconv"
-	"unicode/utf8"
+	"strings"
 )
 
 // Valid checks if the passed cpf is valid
@@ -19,57 +19,69 @@ func Valid(cpf string) bool {
 		return false
 	}
 
-	return fullCPF(cpf) == clean(cpf)
+	verifiedCPF, err := validateCPF(cpf)
+	if err != nil {
+		return false
+	}
+
+	return verifiedCPF == clean(cpf)
 }
 
-func fullCPF(cpf string) string {
-	fd := calcFirstDigit(cpf)
-	sd := calcSecondDigit(cpf)
+func validateCPF(cpf string) (string, error) {
+	fd, err := calcFirstDigit(cpf[:9])
+	if err != nil {
+		return "", err
+	}
+	sd, err := calcSecondDigit(cpf[:9] + strconv.Itoa(fd))
+	if err != nil {
+		return "", err
+	}
 
 	var b bytes.Buffer
 	b.WriteString(clean(cpf)[:9])
 	b.WriteString(strconv.Itoa(fd))
 	b.WriteString(strconv.Itoa(sd))
 
-	return b.String()
+	return b.String(), nil
 }
 
-func calcDigit(cpf string, size int) int {
-	var sum float64
-	for i, v := range reverse(clean(cpf)[:size]) {
-		buf := make([]byte, 1)
-		_ = utf8.EncodeRune(buf, v)
-		value, _ := strconv.ParseFloat(string(buf), 64)
-		sum += value * (float64(i) + 2.0)
+func calcFirstDigit(cpf string) (int, error) {
+	verifiers := []int{10, 9, 8, 7, 6, 5, 4, 3, 2}
+	digits := strings.Split(cpf, "")
+	return calcDigit(digits, verifiers, 9)
+}
+
+func calcSecondDigit(cpf string) (int, error) {
+	verifiers := []int{11, 10, 9, 8, 7, 6, 5, 4, 3, 2}
+	digits := strings.Split(cpf, "")
+
+	return calcDigit(digits, verifiers, 10)
+}
+
+func calcDigit(digits []string, verifiers []int, size int) (int, error) {
+	var sum int
+
+	for i := 0; i < size; i++ {
+		dig, err := strconv.Atoi(digits[i])
+		if err != nil {
+			return sum, err
+		}
+		sum = sum + verifiers[i]*dig
 	}
 
-	r := math.Mod(sum, 11)
+	r := math.Mod(float64(sum), 11)
 	var d float64
 	if r < 2 {
 		d = 0
 	} else {
 		d = 11.0 - r
 	}
-	return int(d)
-}
 
-func calcFirstDigit(cpf string) int {
-	return calcDigit(cpf, 9)
-}
-
-func calcSecondDigit(cpf string) int {
-	return calcDigit(cpf, 10)
+	return int(d), nil
 }
 
 func clean(s string) string {
 	reg := regexp.MustCompile(`[^\d]+`)
 	c := reg.ReplaceAllString(s, "")
 	return c
-}
-
-func reverse(s string) (result string) {
-	for _, v := range s {
-		result = string(v) + result
-	}
-	return
 }
