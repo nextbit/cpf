@@ -54,7 +54,6 @@ func calcFirstDigit(cpf string) (int, error) {
 func calcSecondDigit(cpf string) (int, error) {
 	verifiers := []int{11, 10, 9, 8, 7, 6, 5, 4, 3, 2}
 	digits := strings.Split(cpf, "")
-
 	return calcDigit(digits, verifiers, 10)
 }
 
@@ -69,15 +68,11 @@ func calcDigit(digits []string, verifiers []int, size int) (int, error) {
 		sum = sum + verifiers[i]*dig
 	}
 
-	r := math.Mod(float64(sum), 11)
-	var d float64
-	if r < 2 {
-		d = 0
-	} else {
-		d = 11.0 - r
+	if r := math.Mod(float64(sum), 11); r >= 2 {
+		return int(11 - r), nil
 	}
 
-	return int(d), nil
+	return 0, nil
 }
 
 func clean(s string) string {
