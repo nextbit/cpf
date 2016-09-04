@@ -19,6 +19,34 @@ func TestValidWithoutDots(t *testing.T) {
 	}
 }
 
+func TestShortWithDots(t *testing.T) {
+	v := Valid("123.123.123")
+	if v != false {
+		t.Error("Expected false, got", v)
+	}
+}
+
+func TestShortWithoutDots(t *testing.T) {
+	v := Valid("123123123")
+	if v != false {
+		t.Error("Expected false, got", v)
+	}
+}
+
+func TestLongWithDots(t *testing.T) {
+	v := Valid("123.123.123.12-12")
+	if v != false {
+		t.Error("Expected false, got", v)
+	}
+}
+
+func TestLongWithoutDots(t *testing.T) {
+	v := Valid("123123123123")
+	if v != false {
+		t.Error("Expected false, got", v)
+	}
+}
+
 func TestInValidWithDots(t *testing.T) {
 	v := Valid("123.123.123.12")
 	if v != false {
