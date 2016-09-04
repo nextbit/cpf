@@ -23,8 +23,8 @@ func Valid(cpf string) bool {
 }
 
 func fullCPF(cpf string) string {
-	fd := calcDigit(cpf, 1)
-	sd := calcDigit(cpf, 2)
+	fd := calcFirstDigit(cpf)
+	sd := calcSecondDigit(cpf)
 
 	var b bytes.Buffer
 	b.WriteString(clean(cpf)[:9])
@@ -34,15 +34,7 @@ func fullCPF(cpf string) string {
 	return b.String()
 }
 
-func calcDigit(cpf string, digit int) int {
-	var size int
-	if digit == 1 {
-		size = 9
-	}
-	if digit == 2 {
-		size = 10
-	}
-
+func calcDigit(cpf string, size int) int {
 	var sum float64
 	for i, v := range reverse(clean(cpf)[:size]) {
 		buf := make([]byte, 1)
@@ -59,6 +51,14 @@ func calcDigit(cpf string, digit int) int {
 		d = 11.0 - r
 	}
 	return int(d)
+}
+
+func calcFirstDigit(cpf string) int {
+	return calcDigit(cpf, 9)
+}
+
+func calcSecondDigit(cpf string) int {
+	return calcDigit(cpf, 10)
 }
 
 func clean(s string) string {
