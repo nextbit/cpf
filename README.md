@@ -5,7 +5,9 @@ Brazilian CPF validator
 
 ## Instalation
 
-go get github.com/ustrajunior/cpf
+```
+go get github.com/nextbit/cpf
+```
 
 ## Usage
 
